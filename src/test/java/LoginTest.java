@@ -23,7 +23,7 @@ public class LoginTest {
 
     private User user;
     private UserClient userClient;
-    private String accessToken;
+    private String auth;
     private MainPage mainPage;
 
     @Before
@@ -33,14 +33,14 @@ public class LoginTest {
         userClient = new UserClient();
         user = User.getRandom();
         ValidatableResponse response = userClient.userCreate(user);
-        accessToken = response.extract().path("accessToken");
+        auth = response.extract().path("accessToken");
         mainPage = open(MAIN_PAGE_URL, MainPage.class);
     }
 
     @After
     public void tearDown() {
-        if (accessToken != null && user != null) {
-            userClient.deletingUser(accessToken, user);
+        if (auth != null) {
+            userClient.deletingUser(auth);
         }
     }
 

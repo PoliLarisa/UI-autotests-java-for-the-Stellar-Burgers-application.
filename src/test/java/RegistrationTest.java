@@ -1,5 +1,6 @@
 import clients.User;
 import clients.UserClient;
+import clients.UserCredentials;
 import com.codeborne.selenide.Configuration;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
@@ -24,7 +25,9 @@ public class RegistrationTest{
     private User user;
     private UserClient userClient;
     private MainPage mainPage;
-    private String accessToken;
+    private String auth;
+
+
 
     @Before
     public void setUp() {
@@ -37,8 +40,8 @@ public class RegistrationTest{
 
     @After
     public void tearDown() {
-        if (accessToken != null && user != null) {
-            userClient.deletingUser(accessToken, user);
+        if (auth != null) {
+            userClient.deletingUser(auth);
         }
 
     }
@@ -76,5 +79,10 @@ public class RegistrationTest{
         registrationPage.enterPassword(RandomStringUtils.randomAlphabetic(5));
         registrationPage.register();
         assertTrue("Error password field not displayed", registrationPage.errorPasswordFieldIsDisplayed());
+
+        if (userClient.loginUser(user).extract().statusCode() == 200) {
+            auth = userClient.loginUser(user).extract().body().path("accessToken");
+
+        }
     }
 }

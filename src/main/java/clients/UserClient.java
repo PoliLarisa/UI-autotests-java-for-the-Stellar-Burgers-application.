@@ -2,6 +2,9 @@ package clients;
 
 import io.qameta.allure.Step;
 import io.restassured.response.ValidatableResponse;
+
+import java.util.HashMap;
+
 import static io.restassured.RestAssured.given;
 
 public class UserClient extends RestClient {
@@ -18,14 +21,20 @@ public class UserClient extends RestClient {
                 .then().log().all();
     }
 
-    @Step("Authorization user")
-    public ValidatableResponse validation(UserCredentials credentials) {
+    @Step("User login")
+    public ValidatableResponse loginUser(User user) {
+
+        HashMap<String,String> dataBody = new HashMap<String,String>();
+
+        dataBody.put("email", user.getEmail());
+        dataBody.put("password", user.getPassword());
+
         return given()
                 .spec(getBaseSpec())
-                .body(credentials)
+                .body(dataBody)
                 .when()
                 .post(USER_PATH + "login")
-                .then().log().all();
+                .then();
     }
 
     @Step("Logout user")
@@ -39,13 +48,14 @@ public class UserClient extends RestClient {
     }
 
     @Step("Deleting user")
-    public void deletingUser(String accessToken, User user) {
-        if (user == null) return;
-        given()
+
+    public ValidatableResponse deletingUser(String auth) {
+        return given()
                 .spec(getBaseSpec())
-                .auth().oauth2(accessToken.substring(7))
+                .header("Authorization", auth)
                 .when()
                 .delete(USER_PATH + "user")
-                .then().log().all();
+                .then();
     }
+
 }
