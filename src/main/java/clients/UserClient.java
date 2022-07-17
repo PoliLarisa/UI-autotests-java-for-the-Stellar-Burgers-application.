@@ -49,7 +49,7 @@ public class UserClient extends RestClient {
 
     @Step("Deleting user")
 
-    public ValidatableResponse deletingUser(String auth) {
+    public ValidatableResponse deletUser(String auth) {
         return given()
                 .spec(getBaseSpec())
                 .header("Authorization", auth)

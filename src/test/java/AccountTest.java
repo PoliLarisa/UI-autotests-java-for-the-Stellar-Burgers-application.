@@ -41,7 +41,7 @@ public class AccountTest {
     @After
     public void tearDown() {
         if (auth != null) {
-            userClient.deletingUser(auth);
+            userClient.deletUser(auth);
         }
 
     }

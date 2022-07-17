@@ -40,7 +40,7 @@ public class LoginTest {
     @After
     public void tearDown() {
         if (auth != null) {
-            userClient.deletingUser(auth);
+            userClient.deletUser(auth);
         }
     }
 

@@ -41,7 +41,7 @@ public class RegistrationTest{
     @After
     public void tearDown() {
         if (auth != null) {
-            userClient.deletingUser(auth);
+            userClient.deletUser(auth);
         }
 
     }
@@ -60,8 +60,8 @@ public class RegistrationTest{
         registrationPage.enterEmail(user.getEmail());
         registrationPage.enterPassword(user.getPassword());
         registrationPage.register();
-
         webdriver().shouldHave(url(LOGIN_PAGE_URL));
+        auth = userClient.loginUser(user).extract().body().path("accessToken");
     }
 
     @Test
@@ -78,11 +78,12 @@ public class RegistrationTest{
         registrationPage.enterEmail(user.getEmail());
         registrationPage.enterPassword(RandomStringUtils.randomAlphabetic(5));
         registrationPage.register();
-        assertTrue("Error password field not displayed", registrationPage.errorPasswordFieldIsDisplayed());
-
         if (userClient.loginUser(user).extract().statusCode() == 200) {
             auth = userClient.loginUser(user).extract().body().path("accessToken");
 
         }
+        assertTrue("Error password field not displayed", registrationPage.errorPasswordFieldIsDisplayed());
+
+
     }
 }
